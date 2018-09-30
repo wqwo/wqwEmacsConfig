@@ -63,7 +63,7 @@
 (ggtags-mode 1)
 
 ;;auto-highlight-symbol
-(global-auto-highlight-symbol-mode 1)
+;;(global-auto-highlight-symbol-mode 1)
 
 ;;rtags
 (require 'rtags)
@@ -122,12 +122,23 @@
 
 ;;rainbow-identifier--增强语法高亮显示
 (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
-(add-hook 'c-mode-hook 'rainbow-identifiers-mode)
-(add-hook 'c++-mode-hook 'rainbow-identifiers-mode)
+;;(add-hook 'c-mode-hook 'rainbow-identifiers-mode)
+;;(add-hook 'c++-mode-hook 'rainbow-identifiers-mode)
+
+;;color-identifiers-mode
+(add-hook 'after-init-hook 'global-color-identifiers-mode)
 
 ;;modern-cpp-font-lock
 (modern-c++-font-lock-global-mode t)
 
+;;symbol-overlay
+(require 'symbol-overlay)
+;;(global-set-key (kbd "M-i") 'symbol-overlay-put)
+;;(global-set-key (kbd "M-n") 'symbol-overlay-switch-forward)
+;;(global-set-key (kbd "M-p") 'symbol-overlay-switch-backward)
+;;(global-set-key (kbd "<f7>") 'symbol-overlay-mode)
+;;(global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
+(symbol-overlay-mode t)
 ;;---------------------------------------------插件配置-------------------------------------------------------
 
 (custom-set-variables
@@ -138,7 +149,7 @@
  '(ede-project-directories (quote ("/home/wqw/code/linuxheader/include")))
  '(package-selected-packages
    (quote
-    (modern-cpp-font-lock rainbow-identifiers color-identifiers-mode ggtags company-rtags rtags ecb company-c-headers company-ycmd company undo-tree helm-gtags helm helm-ebdb electric-spacing))))
+    (symbol-overlay ecb company-c-headers company-ycmd company undo-tree helm-gtags helm helm-ebdb electric-spacing))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
