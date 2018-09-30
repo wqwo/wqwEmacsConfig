@@ -122,7 +122,11 @@
 
 ;;rainbow-identifier--增强语法高亮显示
 (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
+(add-hook 'c-mode-hook 'rainbow-identifiers-mode)
+(add-hook 'c++-mode-hook 'rainbow-identifiers-mode)
 
+;;modern-cpp-font-lock
+(modern-c++-font-lock-global-mode t)
 
 ;;---------------------------------------------插件配置-------------------------------------------------------
 
@@ -134,7 +138,7 @@
  '(ede-project-directories (quote ("/home/wqw/code/linuxheader/include")))
  '(package-selected-packages
    (quote
-    (rainbow-identifiers color-identifiers-mode ggtags company-rtags rtags ecb company-c-headers company-ycmd company undo-tree helm-gtags helm helm-ebdb electric-spacing))))
+    (modern-cpp-font-lock rainbow-identifiers color-identifiers-mode ggtags company-rtags rtags ecb company-c-headers company-ycmd company undo-tree helm-gtags helm helm-ebdb electric-spacing))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
