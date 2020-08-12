@@ -1,158 +1,115 @@
 (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+			 ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 (package-initialize) ;; You might already have this line
 
-;;===========================================通用配置================================================
-;;关闭自动保存
-(setq auto-save-default nil)
-;;关闭自动备份
-(setq make-backup-files nil)
-;;关闭同时编辑同一文件产生的.#xx文件
-(setq create-lockfiles nil)
+(setq backup-directory-alist (quote (("." . "~/.backups"))))
 
-;;设置编码为UTF-8
-(setq locale-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-
-;;Tab设置(空格替代, 4字符)
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
-
-;;括号对齐, 补全
-(show-paren-mode t)
-(require 'electric)
-(electric-indent-mode t)
-(electric-pair-mode t)
-(electric-layout-mode t)
-
-;;显示行号
-(global-linum-mode 1)
-(setq linum-format "%d| ")
-
-;;跳转到指定行
-(define-key global-map "\C-c\C-g" 'goto-line)
-;;===========================================通用配置================================================
-
-;;-------------------------------------------插件配置------------------------------------------------
-;;helm配置
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-x b") 'helm-buffers-list)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "C-c r") 'helm-recentf)
-;;(global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
-(setq helm-M-x-fuzzy-match t)
-(helm-mode 1)
-
-
-;;undo tree
-(global-undo-tree-mode)
-
-;;company-mode
-(company-mode 1)
-(add-hook 'after-init-hook 'global-company-mode)
-
-;;ggtags
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-              (ggtags-mode 1))))
-(ggtags-mode 1)
-
-;;auto-highlight-symbol
-;;(global-auto-highlight-symbol-mode 1)
-
-;;rtags
-(require 'rtags)
-(require 'company)
-(setq rtags-autostart-diagnostics t)
-(rtags-diagnostics)
-(setq rtags-completions-enabled t)
-(push 'company-rtags company-backends)
-(global-company-mode)
-(define-key c-mode-base-map (kbd "<C-Tab>") (function company-complete))
-
-(defun use-rtags (&optional useFileManager)
-  (and (rtags-executable-find "rc")
-       (cond ((not (gtags-get-rootpath)) t)
-             ((and (not (eq major-mode 'c++-mode))
-                   (not (eq major-mode 'c-mode))) (rtags-has-filemanager))
-             (useFileManager (rtags-has-filemanager))
-             (t (rtags-is-indexed)))))
-
-(defun tags-find-symbol-at-point (&optional prefix)
-  (interactive "P")
-  (if (and (not (rtags-find-symbol-at-point prefix)) rtags-last-request-not-indexed)
-      (gtags-find-tag)))
-(defun tags-find-references-at-point (&optional prefix)
-  (interactive "P")
-  (if (and (not (rtags-find-references-at-point prefix)) rtags-last-request-not-indexed)
-      (gtags-find-rtag)))
-(defun tags-find-symbol ()
-  (interactive)
-  (call-interactively (if (use-rtags) 'rtags-find-symbol 'gtags-find-symbol)))
-(defun tags-find-references ()
-  (interactive)
-  (call-interactively (if (use-rtags) 'rtags-find-references 'gtags-find-rtag)))
-(defun tags-find-file ()
-  (interactive)
-  (call-interactively (if (use-rtags t) 'rtags-find-file 'gtags-find-file)))
-(defun tags-imenu ()
-  (interactive)
-  (call-interactively (if (use-rtags t) 'rtags-imenu 'idomenu)))
-
-(define-key c-mode-base-map (kbd "M-.") (function tags-find-symbol-at-point))
-(define-key c-mode-base-map (kbd "M-,") (function tags-find-references-at-point))
-(define-key c-mode-base-map (kbd "M-;") (function tags-find-file))
-(define-key c-mode-base-map (kbd "C-.") (function tags-find-symbol))
-(define-key c-mode-base-map (kbd "C-,") (function tags-find-references))
-(define-key c-mode-base-map (kbd "C-<") (function rtags-find-virtuals-at-point))
-(define-key c-mode-base-map (kbd "M-i") (function tags-imenu))
-
-(define-key global-map (kbd "M-.") (function tags-find-symbol-at-point))
-(define-key global-map (kbd "M-,") (function tags-find-references-at-point))
-(define-key global-map (kbd "M-;") (function tags-find-file))
-(define-key global-map (kbd "C-.") (function tags-find-symbol))
-(define-key global-map (kbd "C-,") (function tags-find-references))
-(define-key global-map (kbd "C-<") (function rtags-find-virtuals-at-point))
-(define-key global-map (kbd "M-i") (function tags-imenu))
-
-;;rainbow-identifier--增强语法高亮显示
-(add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
-;;(add-hook 'c-mode-hook 'rainbow-identifiers-mode)
-;;(add-hook 'c++-mode-hook 'rainbow-identifiers-mode)
-
-;;color-identifiers-mode
-(add-hook 'after-init-hook 'global-color-identifiers-mode)
-
-;;modern-cpp-font-lock
-(modern-c++-font-lock-global-mode t)
-
-;;symbol-overlay
-(require 'symbol-overlay)
-;;(global-set-key (kbd "M-i") 'symbol-overlay-put)
-;;(global-set-key (kbd "M-n") 'symbol-overlay-switch-forward)
-;;(global-set-key (kbd "M-p") 'symbol-overlay-switch-backward)
-;;(global-set-key (kbd "<f7>") 'symbol-overlay-mode)
-;;(global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
-(symbol-overlay-mode t)
-;;---------------------------------------------插件配置-------------------------------------------------------
+(setq tool-bar-mode 0)
+(setq inhibit-startup-message 1)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ede-project-directories (quote ("/home/wqw/code/linuxheader/include")))
+ '(global-display-line-numbers-mode t)
  '(package-selected-packages
    (quote
-    (symbol-overlay ecb company-c-headers company-ycmd company undo-tree helm-gtags helm helm-ebdb electric-spacing))))
+    (gxref counsel-projectile ivy-rtags rtags company-ctags counsel-etags company swiper-helm avy counsel use-package)))
+ '(safe-local-variable-values (quote ((counsel-etags-project-root . "./trunk"))))
+ '(scroll-bar-mode nil)
+ '(tool-bar-mode nil))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "FreeMono" :foundry "GNU " :slant normal :weight normal :height 98 :width normal)))))
+
+
+;;wqw custome emacs config------
+;;                             |
+;;                             V
+
+
+(require 'cedet)
+(require 'ivy)
+(require 'counsel)
+(require 'swiper)
+(require 'company)
+(require 'counsel-etags)
+(require 'company-ctags)
+
+(use-package ivy
+  :init (ivy-mode 1)
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  (global-set-key "\C-s" 'swiper)
+  (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  (global-set-key (kbd "<f6>") 'ivy-resume)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
+  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  (global-set-key (kbd "C-c k") 'counsel-ag)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
+
+
+(use-package company
+  :init (global-company-mode 1))
+
+(use-package counsel-etags
+  :ensure t
+  :bind (("C-]" . counsel-etags-find-tag-at-point))
+  :init
+  (add-hook 'prog-mode-hook
+	    (lambda ()
+	      (add-hook 'after-save-hook
+			'counsel-etags-virtual-update-tags 'append 'local)))
+  :config
+  ;; Don't ask before rereading the TAGS files if they have changed
+  (setq tags-revert-without-query t)
+  ;; Don't warn when TAGS files are large
+  (setq large-file-warning-threshold nil)
+  (setq counsel-etags-update-interval 60)
+  (push "build" counsel-etags-ignore-directories)
+  ;; counsel-etags-ignore-directories does NOT support wildcast
+  (push "build_clang" counsel-etags-ignore-directories)
+  (push "build_clang" counsel-etags-ignore-directories)
+  ;; counsel-etags-ignore-filenames supports wildcast
+  (push "TAGS" counsel-etags-ignore-filenames)
+  (push "*.json" counsel-etags-ignore-filenames))
+
+(use-package company-ctags
+  :config
+  (with-eval-after-load 'company
+    (company-ctags-auto-setup)))
+
+(use-package rtags
+  :init
+  (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
+  (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
+  (add-hook 'objc-mode-hook 'rtags-start-process-unless-running)
+  (with-eval-after-load 'company
+    (push 'company-rtags company-backends))
+  :config
+  (setq rtags-completions-enabled t)
+  (setq rtags-display-result-backend 'ivy)
+  (define-key c-mode-base-map (kbd "<C-tab>") (function company-complete)))
+
+
+(use-package counsel-projectile
+  :init
+  (projectile-mode +1)
+  :config
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
+(use-package gxref
+  :config
+  (add-to-list 'xref-backend-functions 'gxref-xref-backend))
