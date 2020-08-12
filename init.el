@@ -28,7 +28,7 @@
  '(default ((t (:family "FreeMono" :foundry "GNU " :slant normal :weight normal :height 98 :width normal)))))
 
 
-;;wqw custome emacs config------
+;;wqw custom emacs config------
 ;;                             |
 ;;                             V
 
