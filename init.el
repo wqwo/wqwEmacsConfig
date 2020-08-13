@@ -15,7 +15,7 @@
  '(global-display-line-numbers-mode t)
  '(package-selected-packages
    (quote
-    (gxref counsel-projectile ivy-rtags rtags company-ctags counsel-etags company swiper-helm avy counsel use-package)))
+    (company-inf-ruby undo-fu counsel-gtags projectile-ripgrep ag company-rtags robe rvm gxref counsel-projectile ivy-rtags rtags company-ctags counsel-etags company swiper-helm avy counsel use-package)))
  '(safe-local-variable-values (quote ((counsel-etags-project-root . "./trunk"))))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
@@ -28,7 +28,7 @@
  '(default ((t (:family "FreeMono" :foundry "GNU " :slant normal :weight normal :height 98 :width normal)))))
 
 
-;;wqw custom emacs config------
+;;wqw custome emacs config------
 ;;                             |
 ;;                             V
 
@@ -64,6 +64,11 @@
 (use-package company
   :init (global-company-mode 1))
 
+(use-package robe
+  :init (add-hook 'ruby-mode-hook 'robe-mode)
+  :config
+  (eval-after-load 'company '(push 'company-robe company-backends)))
+
 (use-package counsel-etags
   :ensure t
   :bind (("C-]" . counsel-etags-find-tag-at-point))
@@ -85,6 +90,18 @@
   ;; counsel-etags-ignore-filenames supports wildcast
   (push "TAGS" counsel-etags-ignore-filenames)
   (push "*.json" counsel-etags-ignore-filenames))
+
+;;(use-package counsel-gtags
+;;  :init
+;;  (add-hook 'c-mode-hook 'counsel-gtags-mode)
+;;  (add-hook 'c++-mode-hook 'counsel-gtags-mode)
+;;  :config
+;;(with-eval-after-load 'counsel-gtags
+;;  (define-key counsel-gtags-mode-map (kbd "M-t") 'counsel-gtags-find-definition)
+;;  (define-key counsel-gtags-mode-map (kbd "M-r") 'counsel-gtags-find-reference)
+;;  (define-key counsel-gtags-mode-map (kbd "M-s") 'counsel-gtags-find-symbol)
+;;  (define-key counsel-gtags-mode-map (kbd "M-,") 'counsel-gtags-go-backward)))
+;;
 
 (use-package company-ctags
   :config
@@ -113,3 +130,21 @@
 (use-package gxref
   :config
   (add-to-list 'xref-backend-functions 'gxref-xref-backend))
+
+(use-package cedet
+  :config
+  (semantic-mode 1))
+
+(use-package undo-fu
+  :config
+  (global-unset-key (kbd "C-x u"))
+  (global-set-key (kbd "C-x u")   'undo-fu-only-undo)
+  (global-set-key (kbd "C-x r") 'undo-fu-only-redo))
+
+;;python support
+;;sudo apt-get install elpa-elpy 
+(use-package elpy
+  :ensure t
+  :defer t
+  :init
+  (advice-add 'python-mode :before 'elpy-enable))
