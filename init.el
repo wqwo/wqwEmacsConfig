@@ -91,17 +91,24 @@
   (push "TAGS" counsel-etags-ignore-filenames)
   (push "*.json" counsel-etags-ignore-filenames))
 
-;;(use-package counsel-gtags
-;;  :init
-;;  (add-hook 'c-mode-hook 'counsel-gtags-mode)
-;;  (add-hook 'c++-mode-hook 'counsel-gtags-mode)
-;;  :config
-;;(with-eval-after-load 'counsel-gtags
-;;  (define-key counsel-gtags-mode-map (kbd "M-t") 'counsel-gtags-find-definition)
-;;  (define-key counsel-gtags-mode-map (kbd "M-r") 'counsel-gtags-find-reference)
-;;  (define-key counsel-gtags-mode-map (kbd "M-s") 'counsel-gtags-find-symbol)
-;;  (define-key counsel-gtags-mode-map (kbd "M-,") 'counsel-gtags-go-backward)))
-;;
+;;for c++, can also for c;
+;;because counsel-etags for c++, the generate 'TAGS' size is always 0.
+(use-package counsel-gtags
+  :init
+  (add-hook 'c-mode-hook 'counsel-gtags-mode)
+  (add-hook 'c++-mode-hook 'counsel-gtags-mode)
+  :config
+(with-eval-after-load 'counsel-gtags
+  (define-key counsel-gtags-mode-map (kbd "M-g g d") 'counsel-gtags-find-definition)
+  (define-key counsel-gtags-mode-map (kbd "M-g g D") 'counsel-gtags-dwim)
+  (define-key counsel-gtags-mode-map (kbd "M-g g r") 'counsel-gtags-find-reference)
+  (define-key counsel-gtags-mode-map (kbd "M-g g s") 'counsel-gtags-find-symbol)
+  (define-key counsel-gtags-mode-map (kbd "M-g g c") 'counsel-gtags-create-tags)
+  (define-key counsel-gtags-mode-map (kbd "M-g g u") 'counsel-gtags-update-tags)
+  (define-key counsel-gtags-mode-map (kbd "M-g g f") 'counsel-gtags-find-file)
+  (define-key counsel-gtags-mode-map (kbd "M-g g ]") 'counsel-gtags-go-forward)
+  (define-key counsel-gtags-mode-map (kbd "M-g g [") 'counsel-gtags-go-backward)))
+
 
 (use-package company-ctags
   :config
