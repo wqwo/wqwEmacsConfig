@@ -15,7 +15,7 @@
  '(global-display-line-numbers-mode t)
  '(package-selected-packages
    (quote
-    (company-inf-ruby undo-fu counsel-gtags projectile-ripgrep ag company-rtags robe rvm gxref counsel-projectile ivy-rtags rtags company-ctags counsel-etags company swiper-helm avy counsel use-package)))
+    (undo-tree modern-cpp-font-lock srefactor xref company-inf-ruby undo-fu counsel-gtags projectile-ripgrep ag company-rtags robe rvm gxref counsel-projectile ivy-rtags rtags company-ctags counsel-etags company swiper-helm avy counsel use-package)))
  '(safe-local-variable-values (quote ((counsel-etags-project-root . "./trunk"))))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
@@ -99,15 +99,15 @@
   (add-hook 'c++-mode-hook 'counsel-gtags-mode)
   :config
 (with-eval-after-load 'counsel-gtags
-  (define-key counsel-gtags-mode-map (kbd "M-g g d") 'counsel-gtags-find-definition)
-  (define-key counsel-gtags-mode-map (kbd "M-g g D") 'counsel-gtags-dwim)
-  (define-key counsel-gtags-mode-map (kbd "M-g g r") 'counsel-gtags-find-reference)
-  (define-key counsel-gtags-mode-map (kbd "M-g g s") 'counsel-gtags-find-symbol)
-  (define-key counsel-gtags-mode-map (kbd "M-g g c") 'counsel-gtags-create-tags)
-  (define-key counsel-gtags-mode-map (kbd "M-g g u") 'counsel-gtags-update-tags)
-  (define-key counsel-gtags-mode-map (kbd "M-g g f") 'counsel-gtags-find-file)
-  (define-key counsel-gtags-mode-map (kbd "M-g g ]") 'counsel-gtags-go-forward)
-  (define-key counsel-gtags-mode-map (kbd "M-g g [") 'counsel-gtags-go-backward)))
+  (define-key counsel-gtags-mode-map (kbd "M-g d") 'counsel-gtags-find-definition)
+  (define-key counsel-gtags-mode-map (kbd "M-g D") 'counsel-gtags-dwim)
+  (define-key counsel-gtags-mode-map (kbd "M-g r") 'counsel-gtags-find-reference)
+  (define-key counsel-gtags-mode-map (kbd "M-g s") 'counsel-gtags-find-symbol)
+  (define-key counsel-gtags-mode-map (kbd "M-g t") 'counsel-gtags-create-tags)
+  (define-key counsel-gtags-mode-map (kbd "M-g u") 'counsel-gtags-update-tags)
+  (define-key counsel-gtags-mode-map (kbd "M-g f") 'counsel-gtags-find-file)
+  (define-key counsel-gtags-mode-map (kbd "M-g ]") 'counsel-gtags-go-forward)
+  (define-key counsel-gtags-mode-map (kbd "M-g [") 'counsel-gtags-go-backward)))
 
 
 (use-package company-ctags
@@ -138,15 +138,23 @@
   :config
   (add-to-list 'xref-backend-functions 'gxref-xref-backend))
 
+
 (use-package cedet
   :config
-  (semantic-mode 1))
+  (semantic-mode 1)
+  (setq semanticdb-find-default-throttle '(file local project unloaded system recursive))
+)
 
-(use-package undo-fu
+;;(use-package undo-fu
+;;  :config
+;;  (global-unset-key (kbd "C-x u"))
+;;  (global-set-key (kbd "C-x u")   'undo-fu-only-undo)
+;;  (global-set-key (kbd "C-x r") 'undo-fu-only-redo))
+;;
+(use-package undo-tree
   :config
-  (global-unset-key (kbd "C-x u"))
-  (global-set-key (kbd "C-x u")   'undo-fu-only-undo)
-  (global-set-key (kbd "C-x r") 'undo-fu-only-redo))
+  (global-undo-tree-mode 1))
+
 
 ;;python support
 ;;sudo apt-get install elpa-elpy 
